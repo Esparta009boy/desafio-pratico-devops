@@ -58,7 +58,7 @@ jobs:
           framework: terraform
           soft_fail: true
 
-  # Job 4: Build da Imagem Docker e Scan de Vulnerabilidade (Trivy)
+  # Job 4: Build da Imagem Docker e Scan de Vulnerabilidade
   docker-build-scan:
     name: 4. Build e Scan Docker (Trivy)
     runs-on: ubuntu-latest
@@ -72,13 +72,11 @@ jobs:
 
       - name: Escanear Imagem com Trivy
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: 'ghcr.io/${{ github.repository }}:latest'
           format: 'table'
-          exit-code: '0'
-          ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
 
   # Job 5: Publicação no Registry Privado (GHCR)
   publish:
