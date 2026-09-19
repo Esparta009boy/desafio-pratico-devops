@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job 1: Verificação de vazamento de segredos
+  # Job 1: Verificação de vazamento de segredos (Gitleaks)
   secret-scan:
     name: 1. Secret Scan (Gitleaks)
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
       - name: Executar Testes com Cobertura
         run: npm test -- --coverage
 
-  # Job 3: Análise estática da Infraestrutura (IaC) - Ajustado com soft_fail
+  # Job 3: Análise estática da Infraestrutura (Checkov)
   iac-scan:
     name: 3. IaC Scan (Checkov)
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
           framework: terraform
           soft_fail: true
 
-  # Job 4: Build da Imagem Docker e Análise de Vulnerabilidade
+  # Job 4: Build da Imagem Docker e Scan de Vulnerabilidade (Trivy)
   docker-build-scan:
     name: 4. Build e Scan Docker (Trivy)
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
         run: docker build -t ghcr.io/${{ github.repository }}:latest .
 
       - name: Escanear Imagem com Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'ghcr.io/${{ github.repository }}:latest'
           format: 'table'
