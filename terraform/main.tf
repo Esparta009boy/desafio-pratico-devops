@@ -15,7 +15,6 @@ provider "aws" {
   skip_metadata_api_check     = true
 }
 
-# Bucket S3 configurado com bloqueio de acesso público (Conforme LGPD e Checkov)
 resource "aws_s3_bucket" "app_data" {
   bucket = "devsecops-app-data-bucket-ronaldo"
 }
@@ -26,4 +25,21 @@ resource "aws_s3_bucket_public_access_block" "app_data_block" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "app_data_encryption" {
+  bucket = aws_s3_bucket.app_data.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "app_data_versioning" {
+  bucket = aws_s3_bucket.app_data.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
