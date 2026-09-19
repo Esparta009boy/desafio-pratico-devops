@@ -38,6 +38,18 @@ A esteira de CI/CD (`pipeline.yml`) foi configurada para disparar a cada `push` 
 
 ---
 
+🏢 Propósito e Aplicação em Ambientes Corporativos
+
+Em um ambiente corporativo real, a implementação deste tipo de esteira com práticas de DevSecOps cumpre papéis fundamentais de governança e estabilidade:
+
+Garantia de Shift-Left Security: Identifica falhas de segurança, má configuração de infraestrutura e credenciais vazadas logo nas primeiras etapas do ciclo de desenvolvimento, mitigando riscos antes que o código chegue a ambientes sensíveis.
+
+Padronização e Independência de Ambiente: Elimina o problema clássico de "na minha máquina funciona", padronizando o ambiente de build e execução através de containers e runners na nuvem, reduzindo a dependência de hardwares robustos locais.
+
+Conformidade e Auditoria: Assegura que nenhum código ou infraestrutura seja promovido para produção sem passar por validações automatizadas de conformidade e testes rigorosos.
+
+Aceleração com Segurança (Velocidade e Resiliência): Automatiza o ciclo de entrega de software de ponta a ponta, reduzindo drasticamente o Lead Time, eliminando gargalos manuais e garantindo alta confiabilidade nos deploys corporativos.
+
 ## 📂 Estrutura do Repositório
 
 ```text
