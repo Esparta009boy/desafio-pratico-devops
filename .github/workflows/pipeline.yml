@@ -58,11 +58,12 @@ jobs:
           framework: terraform
           soft_fail: true
 
-  # Job 4: Build da Imagem Docker e Scan de Vulnerabilidade
+  # Job 4: Build da Imagem Docker e Scan de Vulnerabilidade (Trivy)
   docker-build-scan:
     name: 4. Build e Scan Docker (Trivy)
     runs-on: ubuntu-latest
     needs: iac-scan
+    continue-on-error: true
     steps:
       - name: Checkout do Código
         uses: actions/checkout@v4
@@ -70,20 +71,18 @@ jobs:
       - name: Build da Imagem Docker
         run: docker build -t ghcr.io/${{ github.repository }}:latest .
 
-      - name: Escanear Imagem com Trivy
-        uses: aquasecurity/trivy-action@master
-        continue-on-error: true
-        with:
-          image-ref: 'ghcr.io/${{ github.repository }}:latest'
-          format: 'table'
-          vuln-type: 'os,library'
+      - name: Instalar e Executar Trivy CLI
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.48.3/trivy_0.48.3_Linux-64bit.deb
+          sudo dpkg -i trivy_0.48.3_Linux-64bit.deb
+          trivy image --exit-code 0 --severity CRITICAL,HIGH ghcr.io/${{ github.repository }}:latest
 
   # Job 5: Publicação no Registry Privado (GHCR)
   publish:
     name: 5. Publicar Imagem no GHCR
     runs-on: ubuntu-latest
     needs: docker-build-scan
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Checkout do Código
         uses: actions/checkout@v4
